@@ -12,31 +12,6 @@ Features
 
 -   **Inspect**: View archive contents in text, JSON, or tree format.
 
-Installation
-------------
-
-1.  Ensure you have Go installed (version 1.16 or later).
-
-2.  Clone the repository:
-
-    ```
-    git clone https://github.com/TrulyMine/xpld.git
-    ```
-
-3.  Navigate to the project directory:
-
-    ```
-    cd xpld
-    ```
-
-4.  Build and install the binary:
-
-    ```
-    go install
-    ```
-
-This will place the xpld binary in your $GOPATH/bin directory.
-
 Usage
 -----
 
