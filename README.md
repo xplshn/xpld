@@ -1,7 +1,7 @@
 xpld
 ====
 
-xpld is a command-line tool written in Go for compressing, extracting, and inspecting archive files. It supports various archive formats through the github.com/mholt/archives package, providing a simple and efficient way to manage archives.
+Simple CLI interface to mholt/archives
 
 Features
 --------
@@ -11,31 +11,6 @@ Features
 -   **Extract**: Extract archive contents to a specified directory, with an option to flatten the directory structure.
 
 -   **Inspect**: View archive contents in text, JSON, or tree format.
-
-Installation
-------------
-
-1.  Ensure you have Go installed (version 1.16 or later).
-
-2.  Clone the repository:
-
-    ```
-    git clone https://github.com/TrulyMine/xpld.git
-    ```
-
-3.  Navigate to the project directory:
-
-    ```
-    cd xpld
-    ```
-
-4.  Build and install the binary:
-
-    ```
-    go install
-    ```
-
-This will place the xpld binary in your $GOPATH/bin directory.
 
 Usage
 -----
@@ -50,7 +25,7 @@ Compress files or directories into an archive.
 xpld create <source> -o <output>
 ```
 
--   <source>: Path to the file or directory to compress.
+-   `<source>`: Path to the file or directory to compress.
 
 -   -o, --output: Output path for the archive (required).
 
@@ -68,7 +43,7 @@ Extract the contents of an archive to a specified directory.
 xpld extract <archive> -o <output> [--flatten]
 ```
 
--   <archive>: Path to the archive file.
+-   `<archive>`: Path to the archive file.
 
 -   -o, --output: Output directory for extracted files (required).
 
@@ -88,7 +63,7 @@ View the contents of an archive in different formats.
 xpld inspect <archive> [--json | --txt | --tree]
 ```
 
--   <archive>: Path to the archive file.
+-   `<archive>`: Path to the archive file.
 
 -   --json: Output contents in JSON format.
 
