@@ -25,7 +25,7 @@ Compress files or directories into an archive.
 xpld create <source> -o <output>
 ```
 
--   <source>: Path to the file or directory to compress.
+-   `<source>`: Path to the file or directory to compress.
 
 -   -o, --output: Output path for the archive (required).
 
@@ -43,7 +43,7 @@ Extract the contents of an archive to a specified directory.
 xpld extract <archive> -o <output> [--flatten]
 ```
 
--   <archive>: Path to the archive file.
+-   `<archive>`: Path to the archive file.
 
 -   -o, --output: Output directory for extracted files (required).
 
@@ -63,7 +63,7 @@ View the contents of an archive in different formats.
 xpld inspect <archive> [--json | --txt | --tree]
 ```
 
--   <archive>: Path to the archive file.
+-   `<archive>`: Path to the archive file.
 
 -   --json: Output contents in JSON format.
 
