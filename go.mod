@@ -1,4 +1,4 @@
-module xpld
+module github.com/xplshn/xpld
 
 go 1.24.4
 

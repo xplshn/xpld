@@ -1,3 +1,6 @@
+// xpld is a simple CLI interface to mholt/archives
+// xpld is hosted at https://github.com/xplshn/xpld
+//
 package main
 
 import (
