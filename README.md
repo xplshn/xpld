@@ -1,7 +1,7 @@
 xpld
 ====
 
-xpld is a command-line tool written in Go for compressing, extracting, and inspecting archive files. It supports various archive formats through the github.com/mholt/archives package, providing a simple and efficient way to manage archives.
+Simple CLI interface to mholt/archives
 
 Features
 --------
