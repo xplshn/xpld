@@ -12,6 +12,7 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"regexp"
 	"sort"
 	"strings"
 	"strconv"
@@ -37,7 +38,9 @@ func main() {
 				Aliases:   []string{"c"},
 				Usage:     "create an archive from files or directories",
 				ArgsUsage: "<source>",
-				Flags:     commonFlags(&cli.StringFlag{Name: "output", Aliases: []string{"o"}, Required: true}),
+				Flags: append(commonFlags(&cli.StringFlag{Name: "output", Aliases: []string{"o"}, Required: true}),
+					&cli.StringFlag{Name: "regex", Usage: "include only paths matching this regex"},
+					&cli.StringFlag{Name: "iregex", Usage: "exclude paths matching this regex"}),
 				Action: func(ctx context.Context, c *cli.Command) error {
 					return createArchive(ctx, c, c.Args().First(), c.String("output"))
 				},
@@ -47,8 +50,10 @@ func main() {
 				Aliases:   []string{"e"},
 				Usage:     "extract an archive",
 				ArgsUsage: "<archive>",
-				Flags: append(commonFlags(&cli.StringFlag{Name: "output", Aliases: []string{"o"}, Required: true}),
+				Flags: append(append(commonFlags(&cli.StringFlag{Name: "output", Aliases: []string{"o"}, Required: true}),
 					&cli.BoolFlag{Name: "flatten", Aliases: []string{"f"}}),
+					&cli.StringFlag{Name: "regex", Usage: "include only paths matching this regex"},
+					&cli.StringFlag{Name: "iregex", Usage: "exclude paths matching this regex"}),
 				Action: func(ctx context.Context, c *cli.Command) error {
 					return extractToDirectory(ctx, c, c.Args().First(), c.String("output"))
 				},
@@ -125,16 +130,38 @@ func createArchive(ctx context.Context, c *cli.Command, src, dst string) error {
 		return fmt.Errorf("unsupported archive format")
 	}
 
+	var includeRe, excludeRe *regexp.Regexp
+	if regex := c.String("regex"); regex != "" {
+		re, err := regexp.Compile(regex)
+		if err != nil {
+			return fmt.Errorf("invalid regex for include: %w", err)
+		}
+		includeRe = re
+	}
+	if iregex := c.String("iregex"); iregex != "" {
+		re, err := regexp.Compile(iregex)
+		if err != nil {
+			return fmt.Errorf("invalid regex for exclude: %w", err)
+		}
+		excludeRe = re
+	}
+
 	var inputs []archives.FileInfo
 	err = filepath.WalkDir(src, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
-		info, err := d.Info()
+		rel, err := filepath.Rel(src, path)
 		if err != nil {
 			return err
 		}
-		rel, err := filepath.Rel(src, path)
+		if includeRe != nil && !includeRe.MatchString(rel) {
+			return nil
+		}
+		if excludeRe != nil && excludeRe.MatchString(rel) {
+			return nil
+		}
+		info, err := d.Info()
 		if err != nil {
 			return err
 		}
@@ -175,8 +202,30 @@ func extractToDirectory(ctx context.Context, c *cli.Command, tarball, dst string
 		return fmt.Errorf("unsupported archive format")
 	}
 
+	var includeRe, excludeRe *regexp.Regexp
+	if regex := c.String("regex"); regex != "" {
+		re, err := regexp.Compile(regex)
+		if err != nil {
+			return fmt.Errorf("invalid regex for include: %w", err)
+		}
+		includeRe = re
+	}
+	if iregex := c.String("iregex"); iregex != "" {
+		re, err := regexp.Compile(iregex)
+		if err != nil {
+			return fmt.Errorf("invalid regex for exclude: %w", err)
+		}
+		excludeRe = re
+	}
+
 	return extractor.Extract(ctx, input, func(ctx context.Context, fi archives.FileInfo) error {
 		name := fi.NameInArchive
+		if includeRe != nil && !includeRe.MatchString(name) {
+			return nil
+		}
+		if excludeRe != nil && excludeRe.MatchString(name) {
+			return nil
+		}
 		if c.Bool("flatten") {
 			name = filepath.Base(name)
 		}
