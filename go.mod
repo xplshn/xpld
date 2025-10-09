@@ -20,7 +20,7 @@ require (
 	github.com/klauspost/pgzip v1.2.6 // indirect
 	github.com/mikelolasagasti/xz v1.0.1 // indirect
 	github.com/minio/minlz v1.0.1 // indirect
-	github.com/nwaples/rardecode/v2 v2.2.0 // indirect
+	github.com/nwaples/rardecode/v2 v2.1.1 // indirect
 	github.com/pierrec/lz4/v4 v4.1.22 // indirect
 	github.com/sorairolake/lzip-go v0.3.8 // indirect
 	github.com/spf13/afero v1.15.0 // indirect
